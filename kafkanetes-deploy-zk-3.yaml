@@ -97,8 +97,9 @@ objects:
         containerNames:
         - kafkanetes
         from:
-          kind: ImageStream
-          name: ${IMAGESTREAM}
+        - name: kafkanetes
+          image: kafka
+          imagePullPolicy: IfNotPresent
 
 - apiVersion: v1
   kind: DeploymentConfig
@@ -190,7 +191,8 @@ objects:
         - kafkanetes
         from:
           kind: ImageStream
-          name: ${IMAGESTREAM}
+          namespace: kafka
+          name: kafka:latest
 
 - apiVersion: v1
   kind: Service

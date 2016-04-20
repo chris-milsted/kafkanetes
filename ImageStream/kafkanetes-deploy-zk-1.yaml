@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: kafkanetes-deploy-kafka-1
+  name: kafkanetes-deploy-zk-1
   annotations:
-    description: 1-pod Kafka
-    tags: messaging,kafka
+    description: 1-pod ZooKeeper
+    tags: messaging,zookeeper
 
 parameters:
 - name: VOLUME_CAPACITY
@@ -13,10 +13,6 @@ parameters:
   value: 512Mi
 - name: OBJECT_NAME_PREFIX
   description: Name prefix for each object created
-  required: true
-  value: kafkanetes-kafka
-- name: ZOOKEEPER_SERVICE
-  description: DNS name of ZooKeeper service
   required: true
   value: kafkanetes-zk
 - name: IMAGESTREAM
@@ -51,35 +47,30 @@ objects:
       spec:
         containers:
         - name: kafkanetes
-          image: kafka
-          imagePullPolicy: IfNotPresent
+          image: ${IMAGESTREAM}
           command:
-          - bin/kafka-server-start.sh
+          - bin/zookeeper-server-start.sh
           args:
-          - config/server.properties
-          - --override
-          - zookeeper.connect=${ZOOKEEPER_SERVICE}
-          - --override
-          - advertised.host.name=${OBJECT_NAME_PREFIX}
+          - config/zookeeper.properties
           volumeMounts:
-          - mountPath: /tmp/kafka-logs
-            name: kafka-logs
+          - mountPath: /tmp/zookeeper
+            name: zookeeper
           ports:
-          - containerPort: 9092
+          - containerPort: 2181
         volumes:
-        - name: kafka-logs
+        - name: zookeeper
           persistentVolumeClaim:
             claimName: ${OBJECT_NAME_PREFIX}
     triggers:
+    - type: ConfigChange
     - type: ImageChange
       imageChangeParams:
-        automatic: true
+        automatic: false
         containerNames:
         - kafkanetes
         from:
           kind: ImageStream
-          namespace: kafka
-          name: kafka:latest
+          name: ${IMAGESTREAM}
 
 - apiVersion: v1
   kind: Service
@@ -87,6 +78,6 @@ objects:
     name: ${OBJECT_NAME_PREFIX}
   spec:
     ports:
-    - port: 9092
+    - port: 2181
     selector:
       deploymentconfig: ${OBJECT_NAME_PREFIX}

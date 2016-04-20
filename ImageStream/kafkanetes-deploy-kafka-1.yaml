@@ -51,8 +51,7 @@ objects:
       spec:
         containers:
         - name: kafkanetes
-          image: kafka
-          imagePullPolicy: IfNotPresent
+          image: ${IMAGESTREAM}
           command:
           - bin/kafka-server-start.sh
           args:
@@ -71,15 +70,15 @@ objects:
           persistentVolumeClaim:
             claimName: ${OBJECT_NAME_PREFIX}
     triggers:
+    - type: ConfigChange
     - type: ImageChange
       imageChangeParams:
-        automatic: true
+        automatic: false
         containerNames:
         - kafkanetes
         from:
           kind: ImageStream
-          namespace: kafka
-          name: kafka:latest
+          name: ${IMAGESTREAM}
 
 - apiVersion: v1
   kind: Service

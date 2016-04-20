@@ -110,8 +110,7 @@ objects:
       spec:
         containers:
         - name: kafkanetes
-          image: kafka
-          imagePullPolicy: IfNotPresent
+          image: ${IMAGESTREAM}
           command:
           - bin/kafka-server-start.sh
           args:
@@ -140,8 +139,7 @@ objects:
         - kafkanetes
         from:
           kind: ImageStream
-          namespace: kafka
-          name: kafka:latest
+          name: ${IMAGESTREAM}
 
 - apiVersion: v1
   kind: Service

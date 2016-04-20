@@ -47,7 +47,8 @@ objects:
       spec:
         containers:
         - name: kafkanetes
-          image: ${IMAGESTREAM}
+          image: kafka
+          imagePullPolicy: IfNotPresent
           command:
           - bin/zookeeper-server-start.sh
           args:
@@ -70,7 +71,8 @@ objects:
         - kafkanetes
         from:
           kind: ImageStream
-          name: ${IMAGESTREAM}
+          namespace: kafka
+          name: kafka:latest
 
 - apiVersion: v1
   kind: Service
