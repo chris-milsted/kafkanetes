@@ -11,10 +11,6 @@ parameters:
   description: Name prefix for each object created
   required: true
   value: kafkanetes-debug
-- name: IMAGESTREAM
-  description: Kafkanetes imagestream name
-  required: true
-  value: kafkanetes
 
 objects:
 - apiVersion: v1
@@ -32,7 +28,8 @@ objects:
       spec:
         containers:
         - name: kafkanetes
-          image: ${IMAGESTREAM}
+          image: kafka
+          imagePullPolicy: IfNotPresent
           command:
           - python
           args:

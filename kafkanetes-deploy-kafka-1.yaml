@@ -19,10 +19,6 @@ parameters:
   description: DNS name of ZooKeeper service
   required: true
   value: kafkanetes-zk
-- name: IMAGESTREAM
-  description: Kafkanetes imagestream name
-  required: true
-  value: kafkanetes
 
 objects:
 - apiVersion: v1
@@ -71,15 +67,7 @@ objects:
           persistentVolumeClaim:
             claimName: ${OBJECT_NAME_PREFIX}
     triggers:
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-        - kafkanetes
-        from:
-          kind: ImageStream
-          namespace: kafka
-          name: kafka:latest
+    - type: ConfigChange
 
 - apiVersion: v1
   kind: Service

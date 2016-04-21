@@ -15,10 +15,6 @@ parameters:
   description: Name prefix for each object created
   required: true
   value: kafkanetes-zk
-- name: IMAGESTREAM
-  description: Kafkanetes imagestream name
-  required: true
-  value: kafkanetes
 
 objects:
 - apiVersion: v1
@@ -184,15 +180,6 @@ objects:
             claimName: ${OBJECT_NAME_PREFIX}-3
     triggers:
     - type: ConfigChange
-    - type: ImageChange
-      imageChangeParams:
-        automatic: false
-        containerNames:
-        - kafkanetes
-        from:
-          kind: ImageStream
-          namespace: kafka
-          name: kafka:latest
 
 - apiVersion: v1
   kind: Service
