@@ -37,11 +37,3 @@ objects:
           - import signal; signal.pause()
     triggers:
     - type: ConfigChange
-    - type: ImageChange
-      imageChangeParams:
-        automatic: false
-        containerNames:
-        - kafkanetes
-        from:
-          kind: ImageStream
-          name: ${IMAGESTREAM}
